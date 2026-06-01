@@ -1,14 +1,19 @@
+from itertools import chain
+from urllib import response
+
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
+from langchain_ollama import ChatOllama
 from langchain_core.prompts import PromptTemplate
 
 load_dotenv()
 
-llm = ChatGroq(model="llama-3.3-70b-versatile")
+#llm = ChatGroq(model="llama-3.3-70b-versatile")
+llm = ChatOllama(temperature=0, model="gemma3:270m")
 
 def main():
-    print("Generating summary...")
-information = """  Elon Reeve Musk (born June 28, 1971) is a businessman and past public official known for his leadership of Tesla and SpaceX. Musk has been the wealthiest person in the world since 2025; as of May 2026, Forbes estimates his net worth to be US$828 billion.
+    
+    information = """  Elon Reeve Musk (born June 28, 1971) is a businessman and past public official known for his leadership of Tesla and SpaceX. Musk has been the wealthiest person in the world since 2025; as of May 2026, Forbes estimates his net worth to be US$828 billion.
 
     Born into the wealthy Musk family in Pretoria, South Africa, Musk emigrated in 1989 to Canada; he has Canadian citizenship since his mother was born there. He received bachelor's degrees in 1997 from the University of Pennsylvania before moving to California to pursue business ventures. In 1995, Musk co-founded the software company Zip2. Following its sale in 1999, he co-founded X.com, an online payment company that later merged to form PayPal, which was acquired by eBay in 2002. Musk also became an American citizen in 2002.
 
@@ -19,15 +24,15 @@ information = """  Elon Reeve Musk (born June 28, 1971) is a businessman and pas
     Musk's political activities, statements and views have made him a polarizing figure. He has been criticized for making unscientific and misleading statements, including spreading COVID-19 misinformation, promoting conspiracy theories, and affirming antisemitic, racist, and transphobic comments. His acquisition of Twitter was controversial due to a subsequent increase in hate speech and the spread of misinformation on the service, following his pledge to decrease censorship. His role in the second Trump administration attracted public backlash, particularly in response to DOGE. The emails Musk sent to Jeffrey Epstein are included in the Epstein files, which were published in 2025 and 2026 and became a topic of worldwide debate.
 
 """
-summary_template = """
+    summary_template = """
     given the information {information} about a person I want you to create:
     1. A short summary of the person
     2. 2 fun facts about the person
     """
-summary_prompt_template = PromptTemplate(input_variables=["information"], template=summary_template)
+    summary_prompt_template = PromptTemplate(input_variables=["information"], template=summary_template)
 
-chain = summary_prompt_template | llm
-response = chain.invoke(input={"information": information})
-print(response.content)
+    chain = summary_prompt_template | llm
+    response = chain.invoke(input={"information": information})
+    print(response.content)
 if __name__ == "__main__":
     main()
